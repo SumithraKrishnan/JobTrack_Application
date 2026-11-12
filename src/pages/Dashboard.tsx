@@ -1,13 +1,21 @@
-import {Link} from 'react-router';
+import {Link, useNavigate} from 'react-router';
+
 function Dashboard() {
-    
+    const navigate = useNavigate();
+
+    // logout functionality
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/login');
+    }
+
     return (
         <div>
             <header>
                 <h1>JobTrack</h1>
                 <p>Track your job applications and progress</p>
             </header>
-
+            <button onClick={handleLogout}>Logout</button>
             <main>
                 <section>
                     <h2>Dashboard</h2>

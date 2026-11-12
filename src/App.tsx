@@ -6,6 +6,8 @@ import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import AddApplication from './pages/AddApplication'
 import Applications from './pages/Applications'
+import ProtectedRoute from './components/ProtectedRoute'
+import EditApplication from './pages/EditApplication'
 
 function App() {
   
@@ -18,9 +20,16 @@ function App() {
         <Route path="/" element={<Navigate to="/login" replace/>} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard/>} />
+
+        // Protected routes
+        <Route element={<ProtectedRoute />}>
+             <Route path="/dashboard" element={<Dashboard />} />
+        
+        
         <Route path="/applications/new" element={<AddApplication />}/>
         <Route path="/applications" element={<Applications />}/>
+        <Route path="/applications/:id/edit" element={<EditApplication />} />
+      </Route>
       </Routes>
      
     </>

@@ -1,14 +1,16 @@
 import {useState, type SubmitEvent} from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate} from 'react-router'
 
 function Register() {
+
+  const navigate = useNavigate()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
 
-  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     if ( !name.trim() && !email.trim() && !password && !confirmPassword) {
       setError('All fields are required')
@@ -39,6 +41,49 @@ function Register() {
       return
     }
     setError('')
+    try {
+
+        const response = await fetch('http://localhost:5000/api/auth/register', {
+
+        method: 'POST',
+
+        headers: {
+
+        'Content-Type': 'application/json',
+ },
+
+        body: JSON.stringify({
+
+          name,
+
+          email,
+
+          password,
+}),
+
+ })
+
+ const data = await response.json()
+
+ if (!response.ok) {
+
+ setError(data.message)
+
+ return
+
+ }
+
+ setError('')
+
+ navigate('/login')
+
+} catch (error) {
+
+ console.error('Registration request failed:', error)
+
+ setError('Unable to connect to the server')
+
+}
   }
 
   return (

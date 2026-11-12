@@ -1,4 +1,7 @@
 import { useState, type ChangeEvent, type SubmitEvent } from 'react'
+import { useNavigate } from 'react-router'
+
+
 
 type JobApplication = {
   company: string
@@ -12,6 +15,7 @@ type JobApplication = {
 }
 
 function AddApplication() {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState<JobApplication>({
     company: '',
     role: '',
@@ -36,7 +40,7 @@ function AddApplication() {
     }))
   }
 
-  const handleSubmit = (e: SubmitEvent) => {
+  const handleSubmit = async (e: SubmitEvent) => {
     e.preventDefault()
 
     if (!formData.company.trim() && !formData.role.trim()) {
@@ -55,8 +59,51 @@ function AddApplication() {
     }
 
     setError('')
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setError('You must be logged in to add an application')
+      return
+}
+try {
 
-    console.log(formData)
+ const response = await fetch('http://localhost:5000/api/applications', {
+
+ method: 'POST',
+
+ headers: {
+
+ 'Content-Type': 'application/json',
+
+ Authorization: `Bearer ${token}`,
+
+ },
+
+ body: JSON.stringify(formData),
+
+ })
+
+ const data = await response.json()
+
+ if (!response.ok) {
+
+ setError(data.message || 'Unable to save application')
+
+ return
+
+ }
+
+ setError('')
+
+ navigate('/applications')
+
+} catch (error) {
+
+ console.error('Add application request failed:', error)
+
+ setError('Unable to connect to the server')
+
+}
+
   }
 
   return (

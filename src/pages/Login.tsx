@@ -1,13 +1,15 @@
 import { useState, type SubmitEvent } from 'react';
-import { Link } from 'react-router';
+import { Link,useNavigate } from 'react-router';
 
 function Login() {
+
+const navigate = useNavigate();
 
 const [email, setEmail] = useState('')
 const [password, setPassword] = useState('')
 const [error, setError] = useState('')
 
-const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
+const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
   e.preventDefault()
   if (!email.trim() && !password) {
   setError('Email and password are required')
@@ -29,6 +31,42 @@ const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
 }
 
 setError('')
+
+try {
+
+ const response = await fetch('http://localhost:5000/api/auth/login', {
+
+ method: 'POST',
+
+ headers: { 'Content-Type': 'application/json' },
+
+ body: JSON.stringify({ email, password }),
+
+ })
+
+ const data = await response.json()
+
+ if (!response.ok) {
+
+ setError(data.message)
+
+ return
+
+ }
+
+ localStorage.setItem('token', data.token)
+
+ setError('')
+
+ navigate('/dashboard')
+
+} catch (error) {
+
+ console.error('Login request failed:', error)
+
+ setError('Unable to connect to the server')
+
+}
 }
 
 return (

@@ -8,6 +8,7 @@ import AddApplication from './pages/AddApplication'
 import Applications from './pages/Applications'
 import ProtectedRoute from './components/ProtectedRoute'
 import EditApplication from './pages/EditApplication'
+import AppLayout from './components/AppLayout'
 
 function App() {
   
@@ -23,13 +24,25 @@ function App() {
 
         // Protected routes
         <Route element={<ProtectedRoute />}>
-             <Route path="/dashboard" element={<Dashboard />} />
-        
-        
-        <Route path="/applications/new" element={<AddApplication />}/>
-        <Route path="/applications" element={<Applications />}/>
-        <Route path="/applications/:id/edit" element={<EditApplication />} />
-      </Route>
+          <Route element={<AppLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+
+            <Route
+              path="/applications"
+              element={<Applications />}
+            />
+
+            <Route
+              path="/applications/new"
+              element={<AddApplication />}
+            />
+
+            <Route
+              path="/applications/:id/edit"
+              element={<EditApplication />}
+            />
+          </Route>
+        </Route>
       </Routes>
      
     </>
